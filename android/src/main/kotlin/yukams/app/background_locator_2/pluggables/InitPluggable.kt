@@ -30,10 +30,10 @@ class InitPluggable : Pluggable {
                                     Keys.ARG_INIT_DATA_CALLBACK to initialDataMap
                                 )
                             )
+                            isInitCallbackCalled = true
                         }
                 }
             }
-            isInitCallbackCalled = true
         }
     }
 

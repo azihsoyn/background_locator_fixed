@@ -49,6 +49,9 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         @JvmStatic
         var isServiceInitialized = false
 
+        @JvmStatic
+        var isInitCalled = false
+
         fun getBinaryMessenger(context: Context?): BinaryMessenger? {
             val messenger = backgroundEngine?.dartExecutor?.binaryMessenger
             return messenger
@@ -201,6 +204,8 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         // Fill pluggable list
         if (intent.hasExtra(Keys.SETTINGS_INIT_PLUGGABLE)) {
             pluggables.add(InitPluggable())
+        } else {
+            isInitCalled = true
         }
 
         if (intent.hasExtra(Keys.SETTINGS_DISPOSABLE_PLUGGABLE)) {
@@ -271,6 +276,9 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                 Keys.METHOD_SERVICE_INITIALIZED -> {
                     isServiceRunning = true
                 }
+                Keys.METHOD_PLUGIN_INIT_CALLED -> {
+                    isInitCalled = true
+                }
                 else -> result.notImplemented()
             }
 
@@ -305,7 +313,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
             //https://github.com/flutter/flutter/issues/36059
             //https://github.com/flutter/plugins/pull/1641/commits/4358fbba3327f1fa75bc40df503ca5341fdbb77d
             // new version of flutter can not invoke method from background thread
-            if (location != null) {
+            if (location != null && isInitCalled) {
                 val callback =
                     context?.let {
                         PreferencesManager.getCallbackHandle(

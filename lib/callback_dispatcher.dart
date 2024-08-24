@@ -10,6 +10,7 @@ import 'location_dto.dart';
 void callbackDispatcher() {
   const MethodChannel _backgroundChannel =
       MethodChannel(Keys.BACKGROUND_CHANNEL_ID);
+
   WidgetsFlutterBinding.ensureInitialized();
 
   _backgroundChannel.setMethodCallHandler((MethodCall call) async {
@@ -37,6 +38,7 @@ void callbackDispatcher() {
       Map<dynamic, dynamic>? data = args[Keys.ARG_INIT_DATA_CALLBACK];
       if (initCallback != null) {
         initCallback(data);
+        await _backgroundChannel.invokeMethod(Keys.METHOD_PLUGIN_INIT_CALLED);
       }
     } else if (Keys.BCM_DISPOSE == call.method) {
       final Map<dynamic, dynamic> args = call.arguments;

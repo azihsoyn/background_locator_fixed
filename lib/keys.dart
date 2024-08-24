@@ -16,6 +16,8 @@ class Keys {
       'LocatorPlugin.isServiceRunning';
   static const String METHOD_PLUGIN_UPDATE_NOTIFICATION =
       'LocatorPlugin.updateNotification';
+  static const String METHOD_PLUGIN_INIT_CALLED =
+      'LocatorPlugin.initCalled';
 
   static const String ARG_IS_MOCKED = 'is_mocked';
   static const String ARG_LATITUDE = 'latitude';

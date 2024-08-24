@@ -56,6 +56,7 @@ class BackgroundLocatorPlugin
                     "start locator with ${PreferencesManager.getLocationClient(context)} client")
 
             val callbackHandle = args[Keys.ARG_CALLBACK] as Long
+
             PreferencesManager.setCallbackHandle(context, Keys.CALLBACK_HANDLE_KEY, callbackHandle)
 
             val notificationCallback = args[Keys.ARG_NOTIFICATION_CALLBACK] as? Long
@@ -170,6 +171,11 @@ class BackgroundLocatorPlugin
         }
 
         @JvmStatic
+        private fun initCalled(result: Result?) {
+            result?.success(IsolateHolderService.isServiceRunning)
+        }
+
+        @JvmStatic
         private fun updateNotificationText(context: Context, args: Map<Any, Any>) {
             val intent = Intent(context, IsolateHolderService::class.java)
             intent.action = IsolateHolderService.ACTION_UPDATE_NOTIFICATION
@@ -246,6 +252,9 @@ class BackgroundLocatorPlugin
             }
             Keys.METHOD_PLUGIN_IS_REGISTER_LOCATION_UPDATE -> isServiceRunning(result)
             Keys.METHOD_PLUGIN_IS_SERVICE_RUNNING -> isServiceRunning(result)
+            Keys.METHOD_PLUGIN_INIT_CALLED -> {
+                IsolateHolderService.isInitCalled = true
+            }
             Keys.METHOD_PLUGIN_UPDATE_NOTIFICATION -> {
                 if (!IsolateHolderService.isServiceRunning) {
                     return
